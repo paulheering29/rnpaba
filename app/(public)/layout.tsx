@@ -6,11 +6,15 @@ import { createClient } from "@/lib/supabase/server";
 import type { OrgData } from "@/lib/types";
 
 async function resolveOrg(): Promise<OrgData | null> {
-  const hdrs = await headers();
-  const slug = hdrs.get("x-org-slug");
-  const hostname = hdrs.get("x-org-hostname");
-  if (slug) return getOrgBySlug(slug);
-  if (hostname) return getOrgByDomain(hostname);
+  try {
+    const hdrs = await headers();
+    const slug = hdrs.get("x-org-slug");
+    const hostname = hdrs.get("x-org-hostname");
+    if (slug) return getOrgBySlug(slug);
+    if (hostname) return getOrgByDomain(hostname);
+  } catch {
+    // Don't crash the layout if org resolution fails
+  }
   return null;
 }
 
