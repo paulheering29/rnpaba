@@ -13,8 +13,8 @@ export function proxy(request: NextRequest) {
     return NextResponse.next({ request: { headers: requestHeaders } })
   }
 
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    // Local dev: DEFAULT_ORG_SLUG env var picks which org to render
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.endsWith('.vercel.app')) {
+    // Local dev + Vercel preview/production: DEFAULT_ORG_SLUG env var picks which org to render
     requestHeaders.set('x-org-slug', DEFAULT_ORG_SLUG)
   } else if (hostname === `app.${PLATFORM_DOMAIN}`) {
     // Platform super-admin subdomain
